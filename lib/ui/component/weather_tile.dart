@@ -14,7 +14,7 @@ class ForecastTile extends StatelessWidget {
       children: [
         Center(
           child: Text(
-            '${forecast.day}',
+            '${forecast.day.toString().replaceAll(':00.000', '')}',
             style: TextStyle(
               fontSize: 25.0,
               shadows: <Shadow>[

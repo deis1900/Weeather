@@ -19,15 +19,20 @@ class ImageApiClient {
   }
 
   Future<CityImage> fetchImage(City city) async {
-    String imageUrl
-     = 'https://tatra-yug.com.ua/wp-content/uploads/2016/02/vellington.jpg';
+    String _imageUrl;
+    if (city.name.toLowerCase() == "odessa"){
+      _imageUrl = 'https://cdn.civitatis.com/ucrania/odesa/galeria/vista-aerea-odesa.jpg';
+    }
+    else {_imageUrl
+     = 'https://tatra-yug.com.ua/wp-content/uploads/2016/02/vellington.jpg';}
+
 //    if (city.name != null) {
-//      imageUrl = '$_url/${city.name}';
+//      _imageUrl = '$_url/${city.name}';
 //    } else if (city.lon != null && city.lat != null) {
-//      imageUrl = '$_url/${city.lat}&${city.lon}';
+//      _imageUrl = '$_url/${city.lat}&${city.lon}';
 //    }
-//    await getData(imageUrl).then((value) => CityImage(value, city));
-    return CityImage(imageUrl, city);
+//    await getData(_imageUrl).then((value) => CityImage(value, city));
+    return CityImage(_imageUrl, city);
   }
 
   Future<String> getData(String url) async {

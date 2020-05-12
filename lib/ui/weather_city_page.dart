@@ -6,16 +6,40 @@ import 'package:weeather/blocs/image/image_bloc.dart';
 import 'package:weeather/blocs/image/image_event.dart';
 import 'package:weeather/blocs/image/image_state.dart';
 import 'package:weeather/blocs/weather/weather_bloc.dart';
+import 'package:weeather/blocs/weather/weather_event.dart';
 import 'package:weeather/blocs/weather/weather_state.dart';
+import 'package:weeather/model/city.dart';
 import 'package:weeather/model/city_image.dart';
 import 'package:weeather/model/forecast.dart';
 
 import 'component/weather_tile.dart';
-
-class WeatherCityPage extends StatelessWidget {
-  final String city;
+class WeatherCityPage extends StatefulWidget{
+  final City city;
 
   const WeatherCityPage({@required this.city}) : assert(city != null);
+
+  @override
+  WeatherCityState createState() => WeatherCityState();
+}
+class WeatherCityState extends State<WeatherCityPage> {
+  ImageBloc imageBloc;
+  WeatherBloc weatherBloc;
+
+  @override
+  void initState() {
+    weatherBloc = BlocProvider.of<WeatherBloc>(context);
+    weatherBloc.add(FetchWeather(cityName: widget.city.name));
+    imageBloc = BlocProvider.of<ImageBloc>(context);
+    imageBloc.add(FetchImage(city: widget.city));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    weatherBloc.close();
+    imageBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +55,7 @@ class WeatherCityPage extends StatelessWidget {
                 children: [
                   RichText(
                       text: TextSpan(
-                          text: 'Weather  ${city.toUpperCase()}',
+                          text: 'Weather  ${widget.city.name.toUpperCase()}',
                           style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.w400,
@@ -49,8 +73,6 @@ class WeatherCityPage extends StatelessWidget {
                       }
                       if (state is WeatherLoaded) {
                         final weather = state.weather;
-                        BlocProvider.of<ImageBloc>(context)
-                            .add(FetchImage(city: weather.city));
                         return Container(
                           height: 150,
                           color: Colors.lightBlueAccent,

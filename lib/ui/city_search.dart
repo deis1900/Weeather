@@ -7,6 +7,7 @@ import 'package:weeather/model/city.dart';
 import 'package:weeather/ui/weather_city_page.dart';
 
 class CitySearch extends SearchDelegate<City> {
+  City _city;
   final CitySearchBloc cityBloc;
 
   CitySearch(this.cityBloc);
@@ -18,6 +19,7 @@ class CitySearch extends SearchDelegate<City> {
         icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
+          cityBloc.add(SearchEvent(enteredCity: query));
         },
       ),
     ];
@@ -38,9 +40,9 @@ class CitySearch extends SearchDelegate<City> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-      cityBloc.add(
-        SearchEvent(enteredCity: query),
-      );
+    cityBloc.add(
+      SearchEvent(enteredCity: query),
+    );
     return BlocBuilder<CitySearchBloc, CitySearchState>(
       bloc: cityBloc,
       builder: (BuildContext context, CitySearchState state) {
@@ -55,77 +57,41 @@ class CitySearch extends SearchDelegate<City> {
             child: Text('Error, cities wasn`t downloaded.'),
           );
         }
-//        else if (state is LoadedAllCitiesState) {
-//          if (state.cities != null) {
-//            return ListView.builder(
-//              itemBuilder: (context, index) {
-//                return ListTile(
-//                  onTap: () {
-//                    state.cities.forEach((cityVal) {
-//                      if (cityVal.name.toLowerCase() == query.toLowerCase()) {
-//                        showResults(context);
-//                      }
-//                    });
-//                  },
-//                  leading: Icon(Icons.location_city),
-//                  title: RichText(
-//                    text: TextSpan(
-//                        text:
-//                        state.cities[index].name.substring(0, query.length),
-//                        style: TextStyle(
-//                            color: Colors.black, fontWeight: FontWeight.bold),
-//                        children: [
-//                          TextSpan(
-//                              text: state.cities[index].name
-//                                  .substring(query.length),
-//                              style: TextStyle(color: Colors.green))
-//                        ]),
-//                  ),
-//                );
-//              },
-//              itemCount: state.cities.length,
-//            );
-//          } else {
-//            showResults(context);
-//            return Container();
-//          }
-//        }
+
         else if (state is SearchedCitiesState) {
-          if (state.cities.length < 1 && state.cities.first.name == query) {
-            return WeatherCityPage(
-              city: state.cities[0].name,
-            );
-          } else {
-            return ListView.builder(
-              itemBuilder: (context, index) {
-                return ListTile(
-                  onTap: () {
-                    state.cities.forEach((cityVal) {
-                      if (cityVal.name.toLowerCase() == query.toLowerCase()) {
-                        showResults(context);
-                      }
-                    });
-                  },
-                  leading: Icon(Icons.location_city),
-                  title: RichText(
-                    text: TextSpan(
-                        text:
-                        state.cities[index].name.substring(0, query.length),
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold),
-                        children: [
-                          TextSpan(
-                              text: state.cities[index].name
-                                  .substring(query.length),
-                              style: TextStyle(color: Colors.green))
-                        ]),
-                  ),
-                );
-              },
-              itemCount: state.cities.length,
-            );
-          }
-        } else {
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              if (state.cities != null && query != null &&
+                  query.toLowerCase() == state.cities[index].name.toLowerCase()) {
+                _city = state.cities[index];
+                showResults(context);
+                return WeatherCityPage(city: _city,);
+              }
+              return ListTile(
+                onTap: () {
+                  _city = state.cities[index];
+                  showResults(context);
+                },
+                leading: Icon(Icons.location_city),
+                title: RichText(
+                  text: TextSpan(
+                      text:
+                      state.cities[index].name.substring(0, query.length),
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(
+                            text: state.cities[index].name
+                                .substring(query.length),
+                            style: TextStyle(color: Colors.green))
+                      ]),
+                ),
+              );
+            },
+            itemCount: state.cities.length,
+          );
+        }
+        else {
           debugPrint('The state is not exists!');
           return Container(
             child: Text('Found UI error. Maybe another time.'),
@@ -137,8 +103,13 @@ class CitySearch extends SearchDelegate<City> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return WeatherCityPage(
-      city: query,
-    );
+    if (_city != null) {
+      return WeatherCityPage(
+        city: _city,
+      );
+    } else
+      return Center(
+        child: Text('Pease, enter the current city.'),
+      );
   }
 }

@@ -6,7 +6,8 @@ import 'package:weeather/model/city.dart';
 import 'package:weeather/repositories/dto/city_dto.dart';
 
 class CityRepository {
-   static List<City> _cities;
+  static List<City> _cities;
+
   CityRepository();
 
   Future<String> _loadAsset() async {
@@ -27,15 +28,14 @@ class CityRepository {
         return jsonList
             .map((cityJson) => CityDto.fromJson(cityJson))
             .map(
-              (cityDto) =>
-              City(
+              (cityDto) => City(
                 cityId: cityDto.id,
                 name: cityDto.name,
                 country: cityDto.country,
                 lat: cityDto.coord.lat,
                 lon: cityDto.coord.lon,
               ),
-        )
+            )
             .toList();
       } catch (e) {
         debugPrint(e);
@@ -50,7 +50,8 @@ class CityRepository {
     await Future.delayed(Duration(milliseconds: 300));
     final cities = await getListOfCities();
     List<City> searchedList = cities
-        .where((city) => city.name.contains(enteredCity, 0))
+        .where((city) =>
+            city.name.toLowerCase().contains(enteredCity.toLowerCase(), 0))
         .toList();
     return searchedList;
   }

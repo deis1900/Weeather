@@ -24,16 +24,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class Weather extends State<MyHomePage> {
-  City city;
   ImageBloc imageBloc;
+  WeatherBloc weatherBloc;
 
   @override
   void initState() {
-    // ignore: close_sinks
-    WeatherBloc weatherBloc = BlocProvider.of<WeatherBloc>(context);
+    weatherBloc = BlocProvider.of<WeatherBloc>(context);
     weatherBloc.add(LocationWeather());
     imageBloc = BlocProvider.of<ImageBloc>(context);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    weatherBloc.close();
+    imageBloc.close();
+    super.dispose();
   }
 
   @override
