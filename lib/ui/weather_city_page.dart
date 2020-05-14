@@ -11,9 +11,12 @@ import 'package:weeather/blocs/weather/weather_state.dart';
 import 'package:weeather/model/city.dart';
 import 'package:weeather/model/city_image.dart';
 import 'package:weeather/model/forecast.dart';
+import 'package:weeather/repositories/image_repository.dart';
+import 'package:weeather/repositories/weather_repository.dart';
 
 import 'component/weather_tile.dart';
-class WeatherCityPage extends StatefulWidget{
+
+class WeatherCityPage extends StatefulWidget {
   final City city;
 
   const WeatherCityPage({@required this.city}) : assert(city != null);
@@ -21,26 +24,8 @@ class WeatherCityPage extends StatefulWidget{
   @override
   WeatherCityState createState() => WeatherCityState();
 }
+
 class WeatherCityState extends State<WeatherCityPage> {
-  ImageBloc imageBloc;
-  WeatherBloc weatherBloc;
-
-  @override
-  void initState() {
-    weatherBloc = BlocProvider.of<WeatherBloc>(context);
-    weatherBloc.add(FetchWeather(cityName: widget.city.name));
-    imageBloc = BlocProvider.of<ImageBloc>(context);
-    imageBloc.add(FetchImage(city: widget.city));
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    weatherBloc.close();
-    imageBloc.close();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,85 +47,94 @@ class WeatherCityState extends State<WeatherCityPage> {
                               fontStyle: FontStyle.italic,
                               color: Colors.black))),
                   // TODO: Must will be created state from Bloc
-                  BlocBuilder<WeatherBloc, WeatherState>(
-                    builder: (context, state) {
-                      if (state is WeatherEmpty) {
-                        return Center(
-                            child: Text('Please check settings Location'));
-                      }
-                      if (state is WeatherLoading) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if (state is WeatherLoaded) {
-                        final weather = state.weather;
-                        return Container(
-                          height: 150,
-                          color: Colors.lightBlueAccent,
-                          child: PageView.builder(
-                            itemCount: weather.forecasts.length,
-                            itemBuilder: (context, index) {
-                              final Forecast forecast =
-                                  weather.forecasts[index];
-                              return ForecastTile(
-                                forecast: forecast,
-                              );
-                            },
-                          ),
-                        );
-                      }
-                      if (state is WeatherError) {
-                        return Text(
-                          'Something went wrong!',
-                          style: TextStyle(color: Colors.red),
-                        );
-                      } else {
-                        throw Exception('Unknown state!');
-                      }
-                    },
+                  BlocProvider(
+                    create: (BuildContext context) => WeatherBloc(
+                        weatherRepository:
+                            RepositoryProvider.of<WeatherRepository>(context)),
+                    child: BlocBuilder<WeatherBloc, WeatherState>(
+                      builder: (context, state) {
+                        if (state is WeatherEmpty) {
+                          return Center(
+                              child: Text('Please check settings Location'));
+                        }
+                        if (state is WeatherLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (state is WeatherLoaded) {
+                          final weather = state.weather;
+                          return Container(
+                            height: 150,
+                            color: Colors.lightBlueAccent,
+                            child: PageView.builder(
+                              itemCount: weather.forecasts.length,
+                              itemBuilder: (context, index) {
+                                final Forecast forecast =
+                                    weather.forecasts[index];
+                                return ForecastTile(
+                                  forecast: forecast,
+                                );
+                              },
+                            ),
+                          );
+                        }
+                        if (state is WeatherError) {
+                          return Text(
+                            'Something went wrong!',
+                            style: TextStyle(color: Colors.red),
+                          );
+                        } else {
+                          throw Exception('Unknown state!');
+                        }
+                      },
+                    ),
                   ),
 
-                  // TODO: Must will be created state from Bloc
-                  BlocBuilder<ImageBloc, ImageState>(
-                    builder: (context, state) {
-                      if (state is MainImage) {
-                        return Expanded(
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: Image.network(
-                              state.url,
-                              fit: BoxFit.cover,
-                              height: 100,
+                  BlocProvider(
+                    create: (BuildContext context) => ImageBloc(
+                        imageRepository:
+                            RepositoryProvider.of<ImageRepository>(context)),
+                    child: BlocBuilder<ImageBloc, ImageState>(
+                      builder: (context, state) {
+                        if (state is MainImage) {
+                          return Expanded(
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: Image.network(
+                                state.url,
+                                fit: BoxFit.cover,
+                                height: 100,
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                      if (state is ImageLoading) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if (state is ImageLoaded) {
-                        final CityImage cityPicture = state.image;
-                        return Expanded(
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                            child: Image.network(
-                              cityPicture.url,
-                              fit: BoxFit.cover,
-                              height: 100,
+                          );
+                        }
+                        if (state is ImageLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (state is ImageLoaded) {
+                          final CityImage cityPicture = state.image;
+                          return Expanded(
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0)),
+                              child: Image.network(
+                                cityPicture.url,
+                                fit: BoxFit.cover,
+                                height: 100,
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                      if (state is ImageError) {
-                        return Text(
-                          'Something went wrong!',
-                          style: TextStyle(color: Colors.red),
-                        );
-                      } else {
-                        throw Exception('Unknown state!');
-                      }
-                    },
+                          );
+                        }
+                        if (state is ImageError) {
+                          return Text(
+                            'Something went wrong!',
+                            style: TextStyle(color: Colors.red),
+                          );
+                        } else {
+                          throw Exception('Unknown state!');
+                        }
+                      },
+                    ),
                   )
                 ],
               ),

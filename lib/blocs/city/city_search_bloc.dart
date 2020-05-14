@@ -12,11 +12,19 @@ class CitySearchBloc extends Bloc<CitySearchEvent, CitySearchState> {
       : assert(cityRepository != null);
 
   @override
-  CitySearchState get initialState => EmptyCityState();
+  CitySearchState get initialState => LoadingCityState();
 
   @override
   Stream<CitySearchState> mapEventToState(CitySearchEvent event) async* {
     yield LoadingCityState();
+    try {
+      final cities = await cityRepository.getListOfCities();
+      if (cities.first != null) {
+        yield SearchedCitiesState(cities: cities);
+      }
+    } catch (_) {
+      yield ErrorState();
+    }
     if (event is SearchEvent) {
       yield* _mapSortCitiesToState(event.enteredCity);
     }

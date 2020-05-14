@@ -9,8 +9,6 @@ abstract class CitySearchState extends Equatable {
   List<Object> get props => [];
 }
 
-class EmptyCityState extends CitySearchState {}
-
 class LoadingCityState extends CitySearchState {}
 
 class SearchedCitiesState extends CitySearchState {

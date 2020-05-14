@@ -6,7 +6,7 @@ import 'package:weeather/model/city.dart';
 import 'package:weeather/repositories/dto/city_dto.dart';
 
 class CityRepository {
-  static List<City> _cities;
+  List<City> _cities;
 
   CityRepository();
 
@@ -48,11 +48,14 @@ class CityRepository {
 
   Future<List<City>> getSortCityList(String enteredCity) async {
     await Future.delayed(Duration(milliseconds: 300));
-    final cities = await getListOfCities();
-    List<City> searchedList = cities
-        .where((city) =>
-            city.name.toLowerCase().contains(enteredCity.toLowerCase(), 0))
-        .toList();
-    return searchedList;
+    _cities = await getListOfCities();
+    if(enteredCity != '') {
+      List<City> searchedList = _cities
+          .where((city) =>
+          city.name.toLowerCase().startsWith(enteredCity.toLowerCase(), 0))
+          .toList();
+      return searchedList;
+    }
+    return _cities;
   }
 }

@@ -8,6 +8,7 @@ import 'package:weeather/ui/weather_city_page.dart';
 
 class CitySearch extends SearchDelegate<City> {
   City _city;
+  String _previousQuery = '';
   final CitySearchBloc cityBloc;
 
   CitySearch(this.cityBloc);
@@ -19,7 +20,7 @@ class CitySearch extends SearchDelegate<City> {
         icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
-          cityBloc.add(SearchEvent(enteredCity: query));
+         // cityBloc.add(SearchEvent(enteredCity: query));
         },
       ),
     ];
@@ -32,23 +33,16 @@ class CitySearch extends SearchDelegate<City> {
         icon: AnimatedIcons.menu_arrow,
         progress: transitionAnimation,
       ),
-      onPressed: () {
-        close(context, null);
-      },
+      onPressed: () => close(context, null),
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    cityBloc.add(
-      SearchEvent(enteredCity: query),
-    );
     return BlocBuilder<CitySearchBloc, CitySearchState>(
       bloc: cityBloc,
       builder: (BuildContext context, CitySearchState state) {
-        if (state is EmptyCityState) {
-          return Center(child: Text("The list of cities is empty."));
-        } else if (state is LoadingCityState) {
+          if (state is LoadingCityState) {
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -56,16 +50,22 @@ class CitySearch extends SearchDelegate<City> {
           return Container(
             child: Text('Error, cities wasn`t downloaded.'),
           );
-        }
-
-        else if (state is SearchedCitiesState) {
+        } else if (state is SearchedCitiesState) {
+            if (_previousQuery != query){
+              cityBloc.add(SearchEvent(enteredCity: query));
+              _previousQuery = query;
+            }
           return ListView.builder(
             itemBuilder: (context, index) {
-              if (state.cities != null && query != null &&
-                  query.toLowerCase() == state.cities[index].name.toLowerCase()) {
+              if (state.cities != null &&
+                  query != null &&
+                  query.toLowerCase() ==
+                      state.cities[index].name.toLowerCase()) {
                 _city = state.cities[index];
                 showResults(context);
-                return WeatherCityPage(city: _city,);
+                return WeatherCityPage(
+                  city: _city,
+                );
               }
               return ListTile(
                 onTap: () {
@@ -75,8 +75,7 @@ class CitySearch extends SearchDelegate<City> {
                 leading: Icon(Icons.location_city),
                 title: RichText(
                   text: TextSpan(
-                      text:
-                      state.cities[index].name.substring(0, query.length),
+                      text: state.cities[index].name.substring(0, query.length),
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                       children: [
@@ -90,8 +89,7 @@ class CitySearch extends SearchDelegate<City> {
             },
             itemCount: state.cities.length,
           );
-        }
-        else {
+        } else {
           debugPrint('The state is not exists!');
           return Container(
             child: Text('Found UI error. Maybe another time.'),
