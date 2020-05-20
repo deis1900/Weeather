@@ -12,25 +12,19 @@ class ForecastTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       children: [
-        Center(
-          child: Text(
-            '${forecast.day.toString().replaceAll(':00.000', '')}',
-            style: TextStyle(
-              fontSize: 25.0,
-              shadows: <Shadow>[
-                Shadow(
-                  offset: Offset(1.2, 1.2),
-                  blurRadius: 5.0,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                )
+        Row(crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Text(
+                  '${forecast.day.toUtc().toString().replaceAll(':00.000Z', '')}',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                  ),
+                ),
+                Image.network(urlIcon + forecast.icon + '@2x.png'),
               ],
             ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        Row(
-          children: [
-            Image.network(urlIcon + forecast.icon + '@2x.png'),
             Column(
               children: [
                 Text(

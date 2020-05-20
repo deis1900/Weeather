@@ -14,9 +14,10 @@ class WeatherDto {
   final List<WeatherServer> weather;
   final Wind wind;
   final int id;
+  final int timezone;
 
   WeatherDto(this.dt, this.name, this.sys, this.temperature, this.coord,
-      this.weather, this.wind, this.id);
+      this.weather, this.wind, this.id, this.timezone);
 
     factory WeatherDto.fromJson(Map<String, dynamic> json) =>
         _$WeatherDtoFromJson(json);

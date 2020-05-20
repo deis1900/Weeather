@@ -17,6 +17,7 @@ class WeatherApiClient {
   static const String detailApiKey = '&appid=';
   static const String _apiKey = 'cbdb86586c0be26b0ddc728da9f8f3b1';
 
+
   WeatherApiClient({@required this.httpClient}) : assert(httpClient != null);
 
   Future<Weather> fetchWeather(String name) async {
@@ -48,6 +49,7 @@ class WeatherApiClient {
       final WeatherDto result = WeatherDto.fromJson(jso);
 
       final Forecast forecast = Forecast(
+        timeZone: DateTime.fromMillisecondsSinceEpoch(result.timezone * 1000),
         day: DateTime.fromMillisecondsSinceEpoch(result.dt * 1000),
         temp: result.temperature.temp,
         wind: result.wind.speed,
@@ -72,9 +74,6 @@ class WeatherApiClient {
         forecasts,
         DateTime.now(),
       );
-
-      // TODO : delete  - print(weather);
-      print(weather);
       return weather;
     } else {
       throw Exception('Failed to load weather');

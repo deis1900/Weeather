@@ -7,8 +7,9 @@ abstract class CitySearchEvent extends Equatable{
 
 class SearchEvent extends CitySearchEvent {
   final String enteredCity;
+  final bool reloaderList;
 
-  const SearchEvent({@required this.enteredCity}) : assert(enteredCity != null);
+  const SearchEvent(this.reloaderList, {@required this.enteredCity}) : assert(enteredCity != null);
 
   @override
   List<Object> get props => [enteredCity];

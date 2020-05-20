@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:weeather/repositories/city_repository.dart';
@@ -26,13 +28,26 @@ class CitySearchBloc extends Bloc<CitySearchEvent, CitySearchState> {
       yield ErrorState();
     }
     if (event is SearchEvent) {
-      yield* _mapSortCitiesToState(event.enteredCity);
+      yield* _mapSortCitiesToState(event.reloaderList, event.enteredCity);
     }
   }
 
-  Stream<CitySearchState> _mapSortCitiesToState(String enteredCity) async* {
+  Stream<CitySearchState> _mapSortCitiesToState(
+      bool reloaderList, String enteredCity) async* {
+    final int _timer = 900;
+    bool _sendRequest = false;
+
+    Timer(Duration(milliseconds: _timer), () {
+      _sendRequest = true;
+    });
+
+    if (!_sendRequest) {
+      yield LoadingCityState();
+    }
+
     try {
-      final cities = await cityRepository.getSortCityList(enteredCity);
+      final cities =
+          await cityRepository.getSortCityList(reloaderList, enteredCity);
       if (cities.first != null) {
         yield SearchedCitiesState(cities: cities);
       }

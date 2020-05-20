@@ -5,18 +5,17 @@ import 'package:weeather/blocs/image/image_bloc.dart';
 import 'package:weeather/blocs/image/image_state.dart';
 import 'package:weeather/model/city_image.dart';
 
-class ImageComponent extends StatelessWidget{
-
+class ImageComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 350,
+      height: 375,
+      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       child: BlocBuilder<ImageBloc, ImageState>(
         builder: (context, state) {
           if (state is MainImage) {
             return ClipRRect(
-              borderRadius:
-              BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
               child: Image.network(
                 state.url,
                 fit: BoxFit.cover,
@@ -30,8 +29,7 @@ class ImageComponent extends StatelessWidget{
           if (state is ImageLoaded) {
             final CityImage cityPicture = state.image;
             return ClipRRect(
-              borderRadius:
-              BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
               child: Image.network(
                 cityPicture.url,
                 fit: BoxFit.cover,

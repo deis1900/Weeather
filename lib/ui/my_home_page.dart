@@ -29,18 +29,18 @@ class Weather extends State<MyHomePage> {
       appBar: AppBar(
         title: RichText(
           text: TextSpan(
-              text: widget.title,
+              text: 'Weeather',
               style: TextStyle(
-                  fontSize: 35.0,
+                  fontSize: 35,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black38)),
+                  color: Colors.white)),
         ),
       ),
       body: Container(
-        height: 700,
+        height: 600,
         child: Column(
           children: <Widget>[
-            Container(
+            Container(padding: EdgeInsets.all(5.0),
               color: Colors.black12,
               child: RichText(
                   text: TextSpan(
@@ -63,7 +63,7 @@ class Weather extends State<MyHomePage> {
                           RepositoryProvider.of<ImageRepository>(context))),
                 )
               ],
-              child: Column(
+              child: Column(verticalDirection: VerticalDirection.up,
                 children: <Widget>[
                   WeatherComponent(),
                   ImageComponent(),
@@ -75,12 +75,16 @@ class Weather extends State<MyHomePage> {
                 child: BlocProvider(
                   create: (BuildContext context) => CitySearchBloc(
                       cityRepository:
-                      RepositoryProvider.of<CityRepository>(
-                          context)),
+                          RepositoryProvider.of<CityRepository>(context)),
                   child: Builder(
                     builder: (BuildContext context) {
                       return RaisedButton(
-                            child: Text('Search city.'),
+                        child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text('Search city'),
+                            Icon(Icons.search)
+                          ],
+                        ),
                         onPressed: () async {
                           await showSearch<City>(
                             context: context,

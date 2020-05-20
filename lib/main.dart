@@ -13,35 +13,33 @@ import 'blocs/simple_bloc_delegate.dart';
 
 void main() {
   BlocSupervisor.delegate = SimpleBlocDelegate();
-  runApp(App(
-  ));
+  runApp(App());
 }
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return
-      MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider<WeatherRepository>(
-            create: (context) =>
-                WeatherRepository(
-                    weatherApiClient: WeatherApiClient(
-                        httpClient: http.Client())),
-          ),
-          RepositoryProvider<ImageRepository>(
-            create: (context) =>
-                ImageRepository(
-                    imageApiClient: ImageApiClient(httpClient: http.Client())),
-          ),
-          RepositoryProvider<CityRepository>(
-            create: (context) => CityRepository(),
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Weeather',
-          home: MyHomePage(),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<WeatherRepository>(
+          create: (context) => WeatherRepository(
+              weatherApiClient: WeatherApiClient(httpClient: http.Client())),
         ),
-      );
+        RepositoryProvider<ImageRepository>(
+          create: (context) => ImageRepository(
+              imageApiClient: ImageApiClient(httpClient: http.Client())),
+        ),
+        RepositoryProvider<CityRepository>(
+          create: (context) => CityRepository(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        title: 'Weeather',
+        home: MyHomePage(),
+      ),
+    );
   }
 }

@@ -28,6 +28,7 @@ WeatherDto _$WeatherDtoFromJson(Map<String, dynamic> json) {
         ? null
         : Wind.fromJson(json['wind'] as Map<String, dynamic>),
     json['id'] as int,
+    json['timezone'] as int,
   );
 }
 
@@ -41,6 +42,7 @@ Map<String, dynamic> _$WeatherDtoToJson(WeatherDto instance) =>
       'weather': instance.weather?.map((e) => e?.toJson())?.toList(),
       'wind': instance.wind?.toJson(),
       'id': instance.id,
+      'timezone': instance.timezone,
     };
 
 Sys _$SysFromJson(Map<String, dynamic> json) {

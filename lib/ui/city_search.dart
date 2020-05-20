@@ -8,6 +8,7 @@ import 'package:weeather/ui/weather_city_page.dart';
 
 class CitySearch extends SearchDelegate<City> {
   City _city;
+  bool _reloadList = true;
   String _previousQuery = '';
   final CitySearchBloc cityBloc;
 
@@ -20,7 +21,7 @@ class CitySearch extends SearchDelegate<City> {
         icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
-         // cityBloc.add(SearchEvent(enteredCity: query));
+          _reloadList = true;
         },
       ),
     ];
@@ -42,7 +43,11 @@ class CitySearch extends SearchDelegate<City> {
     return BlocBuilder<CitySearchBloc, CitySearchState>(
       bloc: cityBloc,
       builder: (BuildContext context, CitySearchState state) {
-          if (state is LoadingCityState) {
+        if (state is LoadingCityState) {
+          if (_reloadList) {
+            _reloadList = false;
+            cityBloc.add(SearchEvent(_reloadList, enteredCity: query));
+          }
           return Center(
             child: CircularProgressIndicator(),
           );
@@ -51,46 +56,46 @@ class CitySearch extends SearchDelegate<City> {
             child: Text('Error, cities wasn`t downloaded.'),
           );
         } else if (state is SearchedCitiesState) {
-            if (_previousQuery != query){
-              cityBloc.add(SearchEvent(enteredCity: query));
-              _previousQuery = query;
-            }
+          if (_previousQuery != query) {
+            cityBloc.add(SearchEvent(_reloadList, enteredCity: query));
+            _previousQuery = query;
+          }
           return ListView.builder(
             itemBuilder: (context, index) {
-              if (state.cities != null &&
-                  query != null &&
-                  query.toLowerCase() ==
-                      state.cities[index].name.toLowerCase()) {
-                _city = state.cities[index];
-                showResults(context);
-                return WeatherCityPage(
-                  city: _city,
-                );
-              }
               return ListTile(
-                onTap: () {
-                  _city = state.cities[index];
-                  showResults(context);
-                },
-                leading: Icon(Icons.location_city),
-                title: RichText(
-                  text: TextSpan(
-                      text: state.cities[index].name.substring(0, query.length),
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                            text: state.cities[index].name
-                                .substring(query.length),
-                            style: TextStyle(color: Colors.green))
-                      ]),
-                ),
-              );
+                  onTap: () {
+                    _city = state.cities[index];
+                    showResults(context);
+                  },
+                  leading: Icon(Icons.location_city),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      RichText(
+                        text: TextSpan(
+                          text: state.cities[index].name
+                              .substring(0, query.length),
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                          children: [
+                            TextSpan(
+                              text: state.cities[index].name
+                                  .substring(query.length),
+                              style: TextStyle(color: Colors.green),
+                            )
+                          ],
+                        ),
+                      ),
+                      Text(' : ' +
+                          state.cities[index].country +
+                          '  $index of ${state.cities.length}')
+                    ],
+                  ));
             },
             itemCount: state.cities.length,
           );
         } else {
-          debugPrint('The state is not exists!');
+          debugPrint('The state ${state.runtimeType} is not exists!');
           return Container(
             child: Text('Found UI error. Maybe another time.'),
           );
