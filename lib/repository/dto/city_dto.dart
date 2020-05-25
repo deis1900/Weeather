@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:weeather/repositories/dto/weather_dto.dart';
+import 'package:weeather/repository/dto/weather_dto.dart';
+
 
 part 'city_dto.g.dart';
 

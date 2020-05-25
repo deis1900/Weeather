@@ -5,13 +5,13 @@ import 'package:weeather/blocs/image/image_bloc.dart';
 import 'package:weeather/blocs/weather/weather_bloc.dart';
 import 'package:weeather/blocs/weather/weather_event.dart';
 import 'package:weeather/model/city.dart';
-import 'package:weeather/repositories/city_repository.dart';
-import 'package:weeather/repositories/image_repository.dart';
-import 'package:weeather/repositories/weather_repository.dart';
-import 'package:weeather/ui/component/weather_comp.dart';
+import 'package:weeather/repository/city_repository.dart';
+import 'package:weeather/repository/image_repository.dart';
+import 'package:weeather/repository/weather_repository.dart';
+import 'package:weeather/ui/component/weather_component.dart';
 
 import 'city_search.dart';
-import 'component/image_comp.dart';
+import 'component/image_component.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -23,7 +23,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class Weather extends State<MyHomePage> {
-  @override
+
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -88,7 +89,7 @@ class Weather extends State<MyHomePage> {
                         onPressed: () async {
                           await showSearch<City>(
                             context: context,
-                            delegate: CitySearch(
+                            delegate: CitySearchDelegate(
                                 BlocProvider.of<CitySearchBloc>(context)),
                           );
                         },

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:weeather/model/weather.dart';
-import 'package:weeather/repositories/location/location_client.dart';
-import 'package:weeather/repositories/weather_api_client.dart';
+import 'package:weeather/repository/location/location_client.dart';
+import 'package:weeather/repository/weather_api_client.dart';
 
 class WeatherRepository {
   final WeatherApiClient weatherApiClient;

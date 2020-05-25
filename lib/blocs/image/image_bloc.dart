@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:weeather/blocs/image/image_event.dart';
 import 'package:weeather/blocs/image/image_state.dart';
 import 'package:weeather/model/city_image.dart';
-import 'package:weeather/repositories/image_repository.dart';
+import 'package:weeather/repository/image_repository.dart';
 
 class ImageBloc extends Bloc<ImageEvent, ImageState> {
   final ImageRepository imageRepository;

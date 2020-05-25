@@ -6,13 +6,11 @@ import 'package:weeather/blocs/city/city_search_state.dart';
 import 'package:weeather/model/city.dart';
 import 'package:weeather/ui/weather_city_page.dart';
 
-class CitySearch extends SearchDelegate<City> {
+class CitySearchDelegate extends SearchDelegate<City> {
   City _city;
-  bool _reloadList = true;
-  String _previousQuery = '';
   final CitySearchBloc cityBloc;
 
-  CitySearch(this.cityBloc);
+  CitySearchDelegate(this.cityBloc);
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -21,7 +19,7 @@ class CitySearch extends SearchDelegate<City> {
         icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
-          _reloadList = true;
+          cityBloc.add(SearchEvent(enteredCity: query));
         },
       ),
     ];
@@ -44,22 +42,19 @@ class CitySearch extends SearchDelegate<City> {
       bloc: cityBloc,
       builder: (BuildContext context, CitySearchState state) {
         if (state is LoadingCityState) {
-          if (_reloadList) {
-            _reloadList = false;
-            cityBloc.add(SearchEvent(_reloadList, enteredCity: query));
-          }
+          cityBloc.add(SearchEvent(
+              enteredCity: query)); // TODO: check do we need this line
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else if (state is ErrorState) {
+        } else if (state is CitySearchErrorState) {
           return Container(
             child: Text('Error, cities wasn`t downloaded.'),
           );
         } else if (state is SearchedCitiesState) {
-          if (_previousQuery != query) {
-            cityBloc.add(SearchEvent(_reloadList, enteredCity: query));
-            _previousQuery = query;
-          }
+          cityBloc.add(SearchEvent(
+              enteredCity: query)); // TODO: check do we need this line
+
           return ListView.builder(
             itemBuilder: (context, index) {
               return ListTile(
@@ -110,9 +105,10 @@ class CitySearch extends SearchDelegate<City> {
       return WeatherCityPage(
         city: _city,
       );
-    } else
+    } else {
       return Center(
-        child: Text('Pease, enter the current city.'),
+        child: Text('Please, enter the current city.'),
       );
+    }
   }
 }

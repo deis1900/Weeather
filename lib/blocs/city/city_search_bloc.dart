@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
-import 'package:weeather/repositories/city_repository.dart';
+import 'package:weeather/repository/city_repository.dart';
 
 import 'city_search_event.dart';
 import 'city_search_state.dart';
+
+const Duration _inputThreshold = Duration(milliseconds: 500);
 
 class CitySearchBloc extends Bloc<CitySearchEvent, CitySearchState> {
   final CityRepository cityRepository;
@@ -13,46 +16,45 @@ class CitySearchBloc extends Bloc<CitySearchEvent, CitySearchState> {
   CitySearchBloc({@required this.cityRepository})
       : assert(cityRepository != null);
 
+  Timer _timer;
+
   @override
   CitySearchState get initialState => LoadingCityState();
 
   @override
   Stream<CitySearchState> mapEventToState(CitySearchEvent event) async* {
-    yield LoadingCityState();
-    try {
-      final cities = await cityRepository.getListOfCities();
-      if (cities.first != null) {
-        yield SearchedCitiesState(cities: cities);
-      }
-    } catch (_) {
-      yield ErrorState();
-    }
     if (event is SearchEvent) {
-      yield* _mapSortCitiesToState(event.reloaderList, event.enteredCity);
+      yield* _mapFilteredCityListState(event.enteredCity);
+    } else if (event is PerformSearch) {
+      yield* _mapPerformSearch(event);
     }
   }
 
-  Stream<CitySearchState> _mapSortCitiesToState(
-      bool reloaderList, String enteredCity) async* {
-    final int _timer = 900;
-    bool _sendRequest = false;
+  Stream<CitySearchState> _mapFilteredCityListState(String enteredCity) async* {
+    _timer?.cancel();
 
-    Timer(Duration(milliseconds: _timer), () {
-      _sendRequest = true;
+    _timer = Timer(_inputThreshold, () {
+      add(PerformSearch(enteredCity));
     });
+  }
 
-    if (!_sendRequest) {
-      yield LoadingCityState();
-    }
-
+  Stream<CitySearchState> _mapPerformSearch(PerformSearch event) async* {
     try {
-      final cities =
-          await cityRepository.getSortCityList(reloaderList, enteredCity);
-      if (cities.first != null) {
-        yield SearchedCitiesState(cities: cities);
-      }
-    } catch (_) {
-      yield ErrorState();
+      final cities = await cityRepository.searchCity(
+        event.searchQuery,
+      );
+      yield SearchedCitiesState(cities: cities);
+    } catch (e) {
+      debugPrint(
+        'Unable to search city by ${event.searchQuery}' + e.toString(),
+      );
+      yield CitySearchErrorState(e);
     }
+  }
+
+  @override
+  Future<void> close() {
+    _timer.cancel();
+    return super.close();
   }
 }

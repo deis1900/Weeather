@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:weeather/model/city.dart';
@@ -20,11 +21,13 @@ class ImageApiClient {
 
   Future<CityImage> fetchImage(City city) async {
     String _imageUrl;
-    if (city.name.toLowerCase() == "odessa"){
-      _imageUrl = 'https://cdn.civitatis.com/ucrania/odesa/galeria/vista-aerea-odesa.jpg';
+    if (city.name.toLowerCase() == "odessa") {
+      _imageUrl =
+          'https://cdn.civitatis.com/ucrania/odesa/galeria/vista-aerea-odesa.jpg';
+    } else {
+      _imageUrl =
+          'https://tatra-yug.com.ua/wp-content/uploads/2016/02/vellington.jpg';
     }
-    else {_imageUrl
-     = 'https://tatra-yug.com.ua/wp-content/uploads/2016/02/vellington.jpg';}
 
 //    if (city.name != null) {
 //      _imageUrl = '$_url/${city.name}';
@@ -39,8 +42,8 @@ class ImageApiClient {
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final image = json.decode(response.body);
-      print(image);
       return image;
     }
+    debugPrint('Status code not 200 + ${response.statusCode}');
   }
 }

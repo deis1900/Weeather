@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:weeather/blocs/weather/weather_event.dart';
 import 'package:weeather/blocs/weather/weather_state.dart';
 import 'package:weeather/model/weather.dart';
-import 'package:weeather/repositories/weather_repository.dart';
+import 'package:weeather/repository/weather_repository.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final WeatherRepository weatherRepository;

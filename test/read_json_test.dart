@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:weeather/repositories/dto/city_dto.dart';
-import 'package:weeather/repositories/dto/weather_dto.dart';
+import 'package:weeather/repository/dto/city_dto.dart';
+import 'package:weeather/repository/dto/weather_dto.dart';
 
 void main() {
   group(

@@ -23,10 +23,10 @@ class ImageComponent extends StatelessWidget {
               ),
             );
           }
-          if (state is ImageLoading) {
+          else if (state is ImageLoading) {
             return Center(child: CircularProgressIndicator());
           }
-          if (state is ImageLoaded) {
+          else if (state is ImageLoaded) {
             final CityImage cityPicture = state.image;
             return ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -37,7 +37,7 @@ class ImageComponent extends StatelessWidget {
               ),
             );
           }
-          if (state is ImageError) {
+          else if (state is ImageError) {
             return Text(
               'Something went wrong!',
               style: TextStyle(color: Colors.red),

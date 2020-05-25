@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:weeather/model/city.dart';
 import 'package:weeather/model/city_image.dart';
-import 'package:weeather/repositories/image_api_client.dart';
+import 'package:weeather/repository/image_api_client.dart';
 
 class ImageRepository {
   final ImageApiClient imageApiClient;

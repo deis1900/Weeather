@@ -29,4 +29,8 @@ class LoadedAllCitiesState extends CitySearchState {
   List<Object> get props => [cities];
 }
 
-class ErrorState extends CitySearchState {}
+class CitySearchErrorState extends CitySearchState {
+  final dynamic error;
+
+  CitySearchErrorState(this.error);
+}

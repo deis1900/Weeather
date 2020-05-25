@@ -7,10 +7,10 @@ import 'package:weeather/blocs/image/image_event.dart';
 import 'package:weeather/blocs/weather/weather_bloc.dart';
 import 'package:weeather/blocs/weather/weather_event.dart';
 import 'package:weeather/model/city.dart';
-import 'package:weeather/repositories/image_repository.dart';
-import 'package:weeather/repositories/weather_repository.dart';
-import 'package:weeather/ui/component/image_comp.dart';
-import 'package:weeather/ui/component/weather_comp.dart';
+import 'package:weeather/repository/image_repository.dart';
+import 'package:weeather/repository/weather_repository.dart';
+import 'package:weeather/ui/component/image_component.dart';
+import 'package:weeather/ui/component/weather_component.dart';
 
 class WeatherCityPage extends StatefulWidget {
   final City city;

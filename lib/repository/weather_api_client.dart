@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:weeather/model/city.dart';
 import 'package:weeather/model/forecast.dart';
 import 'package:weeather/model/weather.dart';
-import 'package:weeather/repositories/dto/weather_dto.dart';
+import 'package:weeather/repository/dto/weather_dto.dart';
 
 class WeatherApiClient {
   final http.Client httpClient;

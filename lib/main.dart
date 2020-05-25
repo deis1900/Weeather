@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weeather/repositories/city_repository.dart';
-import 'package:weeather/repositories/image_api_client.dart';
-import 'package:weeather/repositories/image_repository.dart';
-import 'package:weeather/repositories/weather_api_client.dart';
-import 'package:weeather/repositories/weather_repository.dart';
 import 'package:http/http.dart' as http;
+import 'package:weeather/repository/city_repository.dart';
+import 'package:weeather/repository/image_api_client.dart';
+import 'package:weeather/repository/image_repository.dart';
+import 'package:weeather/repository/weather_api_client.dart';
+import 'package:weeather/repository/weather_repository.dart';
 import 'package:weeather/ui/my_home_page.dart';
 
 import 'blocs/simple_bloc_delegate.dart';
@@ -36,7 +36,8 @@ class App extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
+//ToDo  dark theme
+//        darkTheme: ThemeData.dark(),
         title: 'Weeather',
         home: MyHomePage(),
       ),
