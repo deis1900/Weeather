@@ -82,16 +82,16 @@ class Wind {
 @JsonSerializable()
 class Temperature {
   final double temp;
-  // ignore: non_constant_identifier_names
-  final double feels_like;
-  // ignore: non_constant_identifier_names
-  final double temp_min;
-  // ignore: non_constant_identifier_names
-  final double temp_max;
+  @JsonKey(name: 'feels_like')
+  final double feelsLike;
+  @JsonKey(name: 'temp_min')
+  final double tempMin;
+  @JsonKey(name: 'temp_max')
+  final double tempMax;
   final int pressure;
   final int humidity;
 
-  Temperature(this.temp, this.feels_like, this.temp_min, this.temp_max,
+  Temperature(this.temp, this.feelsLike, this.tempMin, this.tempMax,
       this.pressure, this.humidity);
 
   factory Temperature.fromJson(Map<String, dynamic> json) =>

@@ -112,9 +112,9 @@ Temperature _$TemperatureFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$TemperatureToJson(Temperature instance) =>
     <String, dynamic>{
       'temp': instance.temp,
-      'feels_like': instance.feels_like,
-      'temp_min': instance.temp_min,
-      'temp_max': instance.temp_max,
+      'feels_like': instance.feelsLike,
+      'temp_min': instance.tempMin,
+      'temp_max': instance.tempMax,
       'pressure': instance.pressure,
       'humidity': instance.humidity,
     };

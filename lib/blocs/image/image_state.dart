@@ -19,12 +19,13 @@ class MainImage extends ImageState {
 class ImageLoading extends ImageState {}
 
 class ImageLoaded extends ImageState {
-  final CityImage image;
+  final List<CityImage> images;
 
-  const ImageLoaded({@required this.image}) : assert(image != null);
+  const ImageLoaded({@required this.images}) : assert(images != null);
 
   @override
-  List<Object> get props => [image];
+  List<Object> get props => [images];
 }
 
-class ImageError extends ImageState {}
+class ImageError extends ImageState {
+}

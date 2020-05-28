@@ -18,5 +18,4 @@ class CityDto {
 
   Map<String, dynamic> toJson() => _$CityDtoToJson(this);
 
-
 }

@@ -1,16 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-import 'city.dart';
-
-class CityImage extends Equatable{
+class CityImage extends Equatable {
   final String url;
-  final City city;
+  final String photographer;
 
-  CityImage(this.url, this.city);
+  CityImage(this.url, this.photographer);
 
   @override
   List<Object> get props => [
-    url,
-    city
-  ];
-  }
+        url,
+        photographer,
+      ];
+}

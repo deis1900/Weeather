@@ -10,10 +10,12 @@ class ImageRepository {
       : assert(imageApiClient != null);
 
   String getMainImage() {
-    return imageApiClient.getImage();
+    return'https://media.gettyimages.com/photos/the-city-of-dreams-new-york'
+              '-citys-skyline-at-twilight-picture-id599766748?s=2048x2048';
   }
 
-  Future<CityImage> fetchImage(City city){
-    return imageApiClient.fetchImage(city);
+  Future<List<CityImage>> fetchImage(City city) async {
+    return await imageApiClient.fetchImage(city);
   }
+
 }

@@ -30,7 +30,7 @@ class WeatherComponent extends StatelessWidget {
                 gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.centerRight,
-                    stops: [0.3, 0.3],
+                    stops: [0.2, 0.2],
                     colors: [Colors.blue, Colors.white]),
               ),
               child: PageView.builder(

@@ -25,8 +25,9 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   Stream<ImageState> _mapFetchImageToState(FetchImage event) async* {
     yield ImageLoading();
     try {
-      final CityImage cityImage = await imageRepository.fetchImage(event.city);
-      yield ImageLoaded(image: cityImage);
+      final List<CityImage> images =
+          await imageRepository.fetchImage(event.city);
+      yield ImageLoaded(images: images);
     } catch (_) {
       yield ImageError();
     }
@@ -35,9 +36,11 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   Stream<ImageState> _mapRefreshImageToState(RefreshImage event) async* {
     yield ImageLoading();
     try {
-      final CityImage cityImage = await imageRepository.fetchImage(event.city);
-      yield ImageLoaded(image: cityImage);
+      final List<CityImage> cityImages =
+          await imageRepository.fetchImage(event.city);
+      yield ImageLoaded(images: cityImages);
     } catch (_) {
+      // TODO: Add details
       yield ImageError();
     }
   }

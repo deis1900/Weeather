@@ -25,46 +25,46 @@ class WeatherCityState extends State<WeatherCityPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.blueGrey,
-        child: Column(
-          children: [
-            Container(
-              height: 600,
-              color: Colors.black12,
-              child: MultiBlocProvider(
-                providers: [
-                  BlocProvider<WeatherBloc>(
-                      create: (BuildContext context) => WeatherBloc(
-                            weatherRepository:
-                                RepositoryProvider.of<WeatherRepository>(
-                                    context),
-                          )..add(FetchWeather(cityName: widget.city.name))),
-                  BlocProvider<ImageBloc>(
-                    create: ((BuildContext context) => ImageBloc(
-                        imageRepository:
-                            RepositoryProvider.of<ImageRepository>(context))
-                      ..add(FetchImage(city: widget.city))),
-                  )
+      color: Colors.blueGrey,
+      child: Column(
+        children: [
+          Container(
+            height: 600,
+            color: Colors.black12,
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<WeatherBloc>(
+                    create: (BuildContext context) => WeatherBloc(
+                          weatherRepository:
+                              RepositoryProvider.of<WeatherRepository>(context),
+                        )..add(FetchWeather(cityName: widget.city.name))),
+                BlocProvider<ImageBloc>(
+                  create: ((BuildContext context) => ImageBloc(
+                      imageRepository:
+                          RepositoryProvider.of<ImageRepository>(context))
+                    ..add(FetchImage(city: widget.city))),
+                )
+              ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RichText(
+                      text: TextSpan(
+                          text: 'Weather  ${widget.city.name.toUpperCase()}',
+                          style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.black))),
+                  // TODO: Must will be created state from Bloc
+                  WeatherComponent(),
+                  ImageComponent(),
                 ],
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    RichText(
-                        text: TextSpan(
-                            text: 'Weather  ${widget.city.name.toUpperCase()}',
-                            style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w400,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.black))),
-                    // TODO: Must will be created state from Bloc
-                    WeatherComponent(),
-                    ImageComponent(),
-                  ],
-                ),
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
