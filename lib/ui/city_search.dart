@@ -53,8 +53,7 @@ class CitySearchDelegate extends SearchDelegate<City> {
           );
         } else if (state is SearchedCitiesState) {
           cityBloc.add(SearchEvent(
-              enteredCity: query)); // TODO: check do we need this line
-
+              enteredCity: query));
           return ListView.builder(
             itemBuilder: (context, index) {
               return ListTile(
@@ -101,13 +100,13 @@ class CitySearchDelegate extends SearchDelegate<City> {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (_city != null) {
+    if (_city.name.toLowerCase() == query.toLowerCase()) {
       return WeatherCityPage(
         city: _city,
       );
     } else {
       return Center(
-        child: Text('Please, enter the current city.'),
+        child: Text('Enter the current city.'),
       );
     }
   }
